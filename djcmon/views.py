@@ -135,50 +135,6 @@ def manager(request):
         form = ManagerForm()
         return render_to_response('home.html', {'form': form,'email':email,'valid_email':valid_email,}, context_instance=RequestContext(request))
 
-def person_detail(email):
-    """
-    """
-
-    try:
-        validate_email(email)
-        where = 'WHERE email_rec.line1 = "%s" ' % email
-    except:
-        return None
-
-    sql = ( 'SELECT id_rec.id, profile_rec.priv_code, profile_rec.birth_date, '
-            'job_rec.job_title, job_rec.title_rank, id_rec.firstname, '
-            'id_rec.lastname, aname_rec.line1 as alt_name,id_rec.addr_line1, '
-            'id_rec.addr_line2, id_rec.city, id_rec.st, id_rec.zip, '
-            'id_rec.phone as homephone, aa_rec.line3 as office_location, '
-            'aa_rec.phone, email_rec.line1 as email '
-            'FROM id_rec '
-            'LEFT JOIN profile_rec on id_rec.id = profile_rec.id '
-            'LEFT JOIN aa_rec as aname_rec on '
-                '(id_rec.id = aname_rec.id AND aname_rec.aa = "ANDR") '
-            'LEFT JOIN aa_rec as email_rec on '
-                '(id_rec.id = email_rec.id AND email_rec.aa = "EML1"), '
-            'job_rec, pos_table, aa_rec '
-            '%s '
-            'AND job_rec.id = id_rec.id '
-            'AND aa_rec.id = id_rec.id '
-            'AND aa_rec.aa in ("EML1","SCHL") '
-            'AND job_rec.tpos_no = pos_table.tpos_no '
-            'AND job_rec.beg_date < "%s" '
-            'AND (job_rec.end_date is null or job_rec.end_date > "%s") '
-            'AND pos_table.active_date < "%s" '
-            'AND (pos_table.inactive_date is null '
-                'OR pos_table.inactive_date > "%s") '
-            'ORDER BY job_rec.title_rank' % (where,NOW,NOW,NOW,NOW) )
-
-    objects = do_sql(sql)
-    person = ''
-    for obj in objects:
-        person = obj
-    if person:
-        return person
-    else:
-        return None
-
 def home(request):
     form = ManagerForm()
     return render_to_response('home.html', {'form':form,'home':True, }, context_instance=RequestContext(request))
