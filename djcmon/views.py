@@ -9,8 +9,8 @@ from django.core.urlresolvers import reverse
 from djforms.core.views import send_mail
 from djzbar.utils.informix import do_sql
 
-from communications import Department, Contact, Newsletter
-from communications.forms import ManagerForm
+from djcmon import Department, Contact, Newsletter
+from djcmon.forms import ManagerForm
 
 from createsend import *
 

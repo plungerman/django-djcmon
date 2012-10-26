@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 
 from djauth.views import loggedout
 
-urlpatterns = patterns('communications.views',
+urlpatterns = patterns('djcmon.views',
     # auth
     url(r'^accounts/login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='auth_login'),
     url(r'^accounts/logout/$', auth_views.logout, {'next_page': '/communications/accounts/loggedout/'}),
