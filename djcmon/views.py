@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.validators import validate_email
 from django.core.urlresolvers import reverse
 
-from djforms.core.views import send_mail
+from djtools.utils.mail import send_mail
 from djzbar.utils.informix import do_sql
 
 from djcmon import Department, Contact, Newsletter
@@ -53,7 +53,12 @@ def subscription(request,action):
     # send email confirmation
     subject = "%s request for Carthage Newsletter: %s" % (action.capitalize(),list.details().Title)
     template = "confirmation_email.html"
-    data = {'id':lid,'title':list.details().Title,'description':settings.DESCRIPTIONS[lid],'email':email,'action':action}
+
+    for d in settings.DESCRIPTIONS:
+        if d[0] == lid:
+            desc = d[1]
+
+    data = {'id':lid,'title':list.details().Title,'description':desc,'email':email,'action':action}
     send_mail(request, [email,], subject, FEMAIL, template, data)
 
     # check user status on lists

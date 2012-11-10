@@ -117,6 +117,8 @@ SESSION_COOKIE_AGE = 86400
 CARTHAGE_CM_ID = ''
 HIDDEN_CM_ID = ''
 API_KEY = ''
+# we use a list of tuples so that we can control the order,
+# whereas a dictionary would not that.
 DESCRIPTIONS = [
     ("",""),
 ]
