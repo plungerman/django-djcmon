@@ -61,6 +61,7 @@ EMAIL_HOST_USER = 'smtpuser@example.com'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+EMAIL_NOTIFICATION = ["arobillard@carthage.edu",]
 DEFAULT_FROM_EMAIL = 'support@example.com'
 SERVER_EMAIL = 'support@example.com'
 SERVER_MAIL='support@example.com'
