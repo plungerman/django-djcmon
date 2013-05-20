@@ -81,9 +81,9 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 TEMPLATE_DIRS = (
-    "/d2/django_templates/communications/",
-    "/d2/django_projects/communications/templates",
-    "/d2/django_templates/",
+    "/d2/django_templates/djcmon/",
+    "/d2/django_templates/djdfir/",
+    "/data2/django_templates/djcher/",
 )
 INSTALLED_APPS = (
     'django.contrib.auth',
