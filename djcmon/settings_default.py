@@ -30,7 +30,7 @@ SQLALQ_PORT=""
 SQLALQ_DATABASE=""
 # language & date/time
 TIME_ZONE = 'America/Chicago'
-USE_TZ = True
+USE_TZ = False
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
@@ -40,6 +40,7 @@ FILE_CHARSET = 'utf-8'
 MEDIA_ROOT = '/data2/django_projects/communications/assets'
 MEDIA_URL = '/assets/'
 STATIC_URL = '/sdjmedia/'
+ROOT_URL = '/communications/'
 SERVER_URL = "www.example.com"
 API_URL = "%s/%s" % (SERVER_URL, "api")
 STATIC_ROOT = ''
@@ -80,6 +81,13 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "djtools.context_processors.sitevars",
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.request",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.media",
+)
 TEMPLATE_DIRS = (
     "/d2/django_templates/djcmon/",
     "/d2/django_templates/djdfir/",
@@ -109,6 +117,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 LOGIN_URL = '/communications/accounts/login/'
+LOGOUT_URL = '/communications/accounts/logout/'
 LOGIN_REDIRECT_URL = '/communications/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_DOMAIN=".example.com"

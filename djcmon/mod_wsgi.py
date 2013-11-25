@@ -8,5 +8,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'djcmon.settings'
 os.environ['PYTHON_EGG_CACHE'] = '/var/cache/python/.python-eggs'
 os.environ['TZ'] = 'America/Chicago'
 
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+#import django.core.handlers.wsgi
+#application = django.core.handlers.wsgi.WSGIHandler()
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+

@@ -7,7 +7,6 @@ from django.core.validators import validate_email
 from django.core.urlresolvers import reverse
 
 from djtools.utils.mail import send_mail
-from djzbar.utils.informix import do_sql
 
 from djcmon import Department, Contact, Newsletter
 from djcmon.forms import ManagerForm
