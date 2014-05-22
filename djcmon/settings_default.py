@@ -111,6 +111,7 @@ LDAP_BASE = "o="
 LDAP_USER = "cn=, o="
 LDAP_PASS = ""
 LDAP_EMAIL_DOMAIN = "example.com"
+LDAP_OBJECT_CLASS = "carthageUser"
 # auth backends
 AUTHENTICATION_BACKENDS = (
     'djauth.ldapBackend.LDAPBackend',

@@ -20,6 +20,9 @@ YEAR = int(datetime.datetime.now().strftime("%Y"))
 MONTH = int(datetime.datetime.now().strftime("%m"))
 FEMAIL = settings.DEFAULT_FROM_EMAIL
 
+import logging
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def subscription(request,action):
     """
@@ -36,7 +39,7 @@ def subscription(request,action):
     elif request.GET:
         lid = request.GET["lid"]
         email = request.GET["email"]
-        action = request.GET.get('action')
+        #action = request.GET.get('action')
     else:
         return HttpResponseRedirect(reverse("newsletters_home"))
     CreateSend.api_key = settings.API_KEY
@@ -136,13 +139,24 @@ def manager(request):
             n.subscriber = subscriber
             newsletters_pub.append(n)
 
-        return render_to_response('manager.html', {
-            'contact':contact, 'email':email, 'action':action,
-            'newsletters_pub':newsletters_pub, }, context_instance=RequestContext(request))
+        return render_to_response(
+            'manager.html', {
+                'contact':contact, 'email':email, 'action':action,
+                'newsletters_pub':newsletters_pub
+            },
+            context_instance=RequestContext(request)
+        )
     else:
         form = ManagerForm()
-        return render_to_response('home.html', {'form': form,'email':email,'valid_email':valid_email,}, context_instance=RequestContext(request))
+        return render_to_response(
+            'home.html',
+            {'form': form,'email':email,'valid_email':valid_email},
+            context_instance=RequestContext(request)
+        )
 
 def home(request):
     form = ManagerForm()
-    return render_to_response('home.html', {'form':form,'home':True, }, context_instance=RequestContext(request))
+    return render_to_response(
+        'home.html', {'form':form,'home':True},
+        context_instance=RequestContext(request)
+    )
