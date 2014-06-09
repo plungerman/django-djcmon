@@ -1,0 +1,132 @@
+{% extends "home.html" %}
+{% block extra_style %}
+<style type="text/css">
+div.growlUI {
+background: url(//www.carthage.edu/assets/img/ico/check48.png) no-repeat 10px 10px;
+}
+div.growlUI h1, div.growlUI h2 {
+    color: white; padding: 5px 5px 5px 75px; text-align: left;
+    font-size:1.4em;
+}
+</style>
+{% endblock %}
+{% block extra_javascript %}
+<script src="https://malsup.github.io/min/jquery.blockUI.min.js"
+    type="text/javascript"></script>
+<script type="text/javascript">
+$(function() {
+    $('.newsletter').click (function ()
+    {
+        var thisCheck = $(this);
+        if (thisCheck.is (':checked'))
+        {
+            var list_title = $(this).val();
+            $.blockUI({
+                message: "<h1>Subscribing to '" + list_title + "'</h1>"
+            });
+            $.post(
+                '{% url "subscription" "subscribe" %}',
+                { lid: $(this).attr("id").split('_')[1], email: "{{email}}" },
+                function(response){
+                    $.unblockUI();
+                }
+            )
+            setTimeout(function() {
+                $.unblockUI({
+                    onUnblock: function(){
+                        $.growlUI(
+                            '<h1>You are now subscribed to</h1>',
+                            "<h2>" + list_title + "</h2>"
+                        );
+                    },
+                    fadeOut: 1000
+                });
+            });
+        } else {
+            var list_title = $(this).val();
+            $.blockUI({
+                message: "<h1>Unsubscribing to '" + list_title + "'</h1>"
+            });
+            $.post(
+                '{% url "subscription" "unsubscribe" %}',
+                { lid: $(this).attr("id").split('_')[1], email: "{{email}}" },
+                function(response){
+                    $.unblockUI();
+                }
+            )
+            setTimeout(function() {
+                $.unblockUI({
+                    onUnblock: function(){
+                        $.growlUI(
+                            '<h1>You have unsubscribed from</h1>',
+                            "<h2>" + list_title + "</h2>" 
+                        );
+                    },
+                    fadeOut: 1000
+                });
+            });
+        }
+    });
+    {% if not action %}
+        $.growlUI(
+            '<h1>You have been unsubscribed.</h1>',
+            "<h2>You can manage all of your subscriptions on this page.</h2>"
+        );
+    {% endif %}
+});
+</script>
+{% endblock %}
+{% block content %}
+    <h1>Manage Your Newsletter Subscriptions</h1>
+    <p>
+        Manage all of your newsletter subscriptions for your email:
+        <strong>{{email}}</strong>.
+    </p>
+    <p>
+        Check the box next to the newsletters that you would like
+        to receive.
+    </p>
+{% if person and not user.is_anonymous and user.email == email %}
+<ul>
+    <li>id = {{person.id}}</li>
+    <li>FERPA = {{person.priv_code}}</li>
+    <li>address = {{person.addr_line1}}</li>
+    <li>address 2 = {{person.addr_line2}}</li>
+    <li>city = {{person.city}}</li>
+    <li>state = {{person.st}}</li>
+    <li>zip = {{person.zip}}</li>
+    <li>phone = {{person.homephone}}</li>
+</ul>
+{% else %}
+    {% if user.is_superuser %}
+    <p>
+        <a href="{{login_url}}?next={% url 'newsletters_manager' %}?email={{email}}">
+            Login to manage your communications preferences
+        </a>.
+    </p>
+    {% endif %}
+{% endif %}
+<form>
+<h3>Carthage Newsletters</h3>
+<ul>
+{% for n in newsletters_pub %}
+    <li>
+        <input id="lid_{{n.listid}}"
+            class="newsletter"
+            type="checkbox"
+            name="newsletters[]"
+            value="{{n.title}}"
+            {% if n.subscriber.state == "Active" %}
+            checked="checked"
+            {% endif %} />
+        <strong>{{n.title}}</strong>
+    </li>
+    <li>
+        <blockquote style="padding-left:5px;">
+            <em>{{n.description}}</em>
+        </blockquote>
+    </li>
+{% endfor %}
+</ul>
+</form>
+{% endblock %}

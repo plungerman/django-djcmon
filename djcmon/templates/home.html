@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block left_nav %}
+    {% include "left_nav.html" %}
+{% endblock %}
+{% block content_head %}
+    <h1 id="page_title">
+        Connect with Carthage
+        <span id="secondary-dropdown"></span>
+    </h1>
+{% endblock %}
+{% block content %}
+<div class="forms-container">
+    <p>Please provide your email address to manage your newsletters.</p>
+    <form method="post" action="{% url 'newsletters_manager' %}" class="form">
+        {% csrf_token %}
+        <fieldset class="blockLabels">
+            <ol>
+            {% for field in form.visible_fields %}
+                <li class="ctrlHolder">
+                <h3{% if field.field.required %} class="required"{% endif %}>
+                    {{ field.label_tag }}
+                </h3>
+                {% if not valid_email and not home %}
+                    <div class="warning">
+                    <span class="error-message">Enter a valid email</span>
+                {% else %}
+                    <div>
+                {% endif %}
+                {% if field.help_text %}
+                    <p class="help">{{field.help_text}}</p>
+                {% endif %}
+                {{field}}
+                </div>
+            </li>
+            {% endfor %}
+            </ol>
+        </fieldset>
+    {% include "form_submit.inc.html" %}
+    </form>
+    <!--
+    <p>
+    {% if not user.is_anonymous %}
+        <a href="{% url 'auth_login' %}?next={{request.path}}">Logout</a>
+    {% else %}
+        If you are part of the Carthage community, please
+        <a href="{% url 'auth_logout' %}?next={{request.path}}">Login</a>
+    {% endif %}
+    </p>
+    -->
+</div>
+{% endblock %}

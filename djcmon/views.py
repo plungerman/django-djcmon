@@ -20,9 +20,6 @@ YEAR = int(datetime.datetime.now().strftime("%Y"))
 MONTH = int(datetime.datetime.now().strftime("%m"))
 FEMAIL = settings.DEFAULT_FROM_EMAIL
 
-import logging
-logger = logging.getLogger(__name__)
-
 @csrf_exempt
 def subscription(request,action):
     """
@@ -41,7 +38,9 @@ def subscription(request,action):
         email = request.GET["email"]
         #action = request.GET.get('action')
     else:
-        return HttpResponseRedirect(reverse("newsletters_home"))
+        return HttpResponseRedirect(
+            reverse("newsletters_home")
+        )
     CreateSend.api_key = settings.API_KEY
     subscriber = Subscriber(lid, email)
     list = List(lid)
@@ -51,17 +50,24 @@ def subscription(request,action):
     elif action == "subscribe":
         response = subscriber.add(lid, email, "", [], True)
     else:
-        return HttpResponseRedirect(reverse("newsletters_home"))
+        return HttpResponseRedirect(
+            reverse("newsletters_home")
+        )
 
     # send email confirmation
-    subject = "%s request for Carthage Newsletter: %s" % (action.capitalize(),list.details().Title)
+    subject = "%s request for Carthage Newsletter: %s" % (
+        action.capitalize(),list.details().Title
+    )
     template = "confirmation_email.html"
 
     for d in settings.DESCRIPTIONS:
         if d[0] == lid:
             desc = d[1]
 
-    data = {'id':lid,'title':list.details().Title,'description':desc,'email':email,'action':action}
+    data = {
+        'id':lid,'title':list.details().Title,
+        'description':desc,'email':email,'action':action
+    }
     send_mail(request, [email,], subject, FEMAIL, template, data)
 
     # check user status on lists
@@ -81,16 +87,26 @@ def subscription(request,action):
 
     # send notification if no lists or first list.
     # OJO: eventually this will go directly to CX
-    if (action == "unsubscribe" and not sub) or (action == "subscribe" and count == 1):
+    if (action == "unsubscribe" and not sub) or (
+        action == "subscribe" and count == 1):
         subject = "%s request: %s" % (action.capitalize(), email)
         template = "alert.html"
         data = {'email':email,'action':action,}
-        send_mail(request, settings.EMAIL_NOTIFICATION, subject, FEMAIL, template, data)
+        send_mail(
+            request, settings.EMAIL_NOTIFICATION, subject,
+            FEMAIL, template, data
+        )
 
     if request.POST:
-        return render_to_response('ajax_response.html', {'response':response, }, context_instance=RequestContext(request))
+        return render_to_response(
+            'ajax_response.html',
+            {'response':response, },
+            context_instance=RequestContext(request)
+        )
     else:
-        return HttpResponseRedirect(reverse("newsletters_manager")+ "?email=%s" % email)
+        return HttpResponseRedirect(
+            reverse("newsletters_manager")+ "?email=%s" % email
+        )
 
 def manager(request):
     """
@@ -131,7 +147,7 @@ def manager(request):
             subscriber = Subscriber(lid)
             try:
                 me = subscriber.get(lid,email)
-                subscriber = Contact(me.State, me.Name, me.EmailAddress, me.Date)
+                subscriber = Contact(me.State,me.Name,me.EmailAddress,me.Date)
                 contact = subscriber
             except:
                 subscriber = None

@@ -1,9 +1,11 @@
 import os, sys
 
 # python
-sys.path.append('/usr/lib/python2.6/dist-packages/')
-sys.path.append('/usr/lib/python2.6/')
-sys.path.append('/data2/django_trunk/')
+sys.path.append('/usr/lib/python2.7/local/dist-packages/')
+sys.path.append('/usr/lib/python2.7/dist-packages/')
+sys.path.append('/usr/lib/python2.7/')
+sys.path.append('/data2/django_current/')
+sys.path.append('/data2/django_third/')
 sys.path.append('/data2/django_projects/')
 # Django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'djcmon.settings'

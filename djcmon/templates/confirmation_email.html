@@ -1,0 +1,24 @@
+<h2>Carthage Newsletter {{data.action|capfirst}} Request</h2>
+
+<p>
+    We have received a request (hopefully from you) to
+    <strong>{{data.action}}</strong> your email
+    {% if data.action == "subscribe" %}
+        to
+    {% else %}
+        from
+    {% endif %}
+    the following newsletter:
+</p>
+<h3>{{data.title}}</h3>
+<p><em>{{data.description}}</em></p>
+<p>If this is correct, you need not take any action.</p>
+<p>
+{% if data.action == "subscribe" %}
+<a href="http://www.carthage.edu/communications/newsletters/unsubscribe/?lid={{data.id}}&email={{data.email}}">Click here</a>
+to unsubscribe from
+{% else %}
+<a href="http://www.carthage.edu/communications/newsletters/subscribe/?lid={{data.id}}&email={{data.email}}">Click here</a>
+to subscribe once again to
+{% endif %}
+the <strong>{{data.title}}</strong> newsletter.</p>
