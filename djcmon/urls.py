@@ -1,9 +1,13 @@
-from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
+from django.conf.urls.defaults import *
 from django.views.generic import TemplateView
+from django.conf.urls import patterns, include, url
+from django.contrib.auth import views as auth_views
 
 from djauth.views import loggedout
+
+handler404 = 'djtools.views.errors.four_oh_four_error'
+handler500 = 'djtools.views.errors.server_error'
 
 urlpatterns = patterns('djcmon.views',
     # auth

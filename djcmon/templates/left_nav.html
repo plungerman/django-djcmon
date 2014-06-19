@@ -1,9 +1,8 @@
 {% load livewhale_api %}
+<h4>Connect</h4>
 {% get_lw_content as nav blurbs 1812 %}
-<h4>Carthage Connect</h4>
 {{nav.body}}
 <ul>
-    <li class="last-featured"></li>
     {% if not user.is_anonymous %}
         <li>
             <a href="{% url 'auth_login' %}?next={{request.path}}">Logout</a>
