@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
-from django.core.validators import validate_email
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.core.validators import validate_email
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
 
 from djtools.utils.mail import send_mail
 
@@ -176,3 +178,12 @@ def home(request):
         'home.html', {'form':form,'home':True},
         context_instance=RequestContext(request)
     )
+
+@login_required
+def saml_test(request):
+    form = ManagerForm()
+    return render_to_response(
+        'saml_test.html',
+        context_instance=RequestContext(request)
+    )
+
