@@ -10,7 +10,15 @@
 {% endblock %}
 {% block content %}
 <div class="forms-container">
-    <p>Please provide your email address to manage your newsletters.</p>
+    <p>
+        Keep up with news from Carthage College by receiving our email
+        newsletters.
+        Carthage sends monthly email newsletters to our parents, alumni, and
+        friends; and weekly email newsletters about Family Fun Night. To manage
+        your email subscriptions, please enter your email address below.
+        You will have an option to subscribe or unsubscribe from our
+        email publications.
+    </p>
     <form method="post" action="{% url 'newsletters_manager' %}" class="form">
         {% csrf_token %}
         <fieldset class="blockLabels">
@@ -37,6 +45,18 @@
         </fieldset>
     {% include "form_submit.inc.html" %}
     </form>
+    <ul>
+        <li>
+            <a href="/communication-digital-media/">
+            Interested in a communication major?
+            </a>
+        </li>
+        <li>
+            <a href="/communications-office/">
+            Looking for the Office of Communications?
+            </a>
+        </li>
+    </ul>
     <!--
     <p>
     {% if not user.is_anonymous %}
