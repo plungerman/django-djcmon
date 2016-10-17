@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.db.models import get_model
 from django.template import Library, Node, TemplateSyntaxError
 
 import httplib
