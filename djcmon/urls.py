@@ -27,14 +27,14 @@ urlpatterns = patterns('djcmon.views',
         loggedout,
         {'template_name': 'accounts/logged_out.html'}
     ),
-    url(
-        r'^saml2/', include('djangosaml2.urls')
-    ),
-    url(
-        r'^saml-test/$',
-        'saml_test',
-        name='saml_test'
-    ),
+    #url(
+    #   r'^saml2/', include('djangosaml2.urls')
+    #),
+    #url(
+    #   r'^saml-test/$',
+    #   'saml_test',
+    #   name='saml_test'
+    #),
     # core
     url(
         r'^$', 'home', name='comms_home'
@@ -59,8 +59,10 @@ urlpatterns = patterns('djcmon.views',
         name='subscription'
     ),
 )
+'''
 urlpatterns += patterns('',
     url(
         r'^test/', 'djangosaml2.views.echo_attributes'
     ),
 )
+'''
