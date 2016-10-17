@@ -179,6 +179,8 @@ def home(request):
         context_instance=RequestContext(request)
     )
 
+'''
+# broken as of django 1.9
 @login_required
 def saml_test(request):
     form = ManagerForm()
@@ -186,4 +188,4 @@ def saml_test(request):
         'saml_test.html',
         context_instance=RequestContext(request)
     )
-
+'''
