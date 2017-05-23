@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.views.generic import TemplateView
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
 
 from djauth.views import loggedout
@@ -8,7 +8,9 @@ from djauth.views import loggedout
 handler404 = 'djtools.views.errors.four_oh_four_error'
 handler500 = 'djtools.views.errors.server_error'
 
-urlpatterns = patterns('djcmon.views',
+from djcmon import views
+
+urlpatterns = [
     # auth
     url(
         r'^accounts/login/$',
@@ -37,16 +39,16 @@ urlpatterns = patterns('djcmon.views',
     #),
     # core
     url(
-        r'^$', 'home', name='comms_home'
+        r'^$', views.home, name='comms_home'
     ),
     url(
         r'^newsletters/$',
-        'home',
+        views.home,
         name='newsletters_home'
     ),
     url(
         r'^newsletters/manager/$',
-        'manager',
+        views.manager,
         name='newsletters_manager'
     ),
     #url(
@@ -55,14 +57,14 @@ urlpatterns = patterns('djcmon.views',
     #),
     url(
         r'^newsletters/(?P<action>[\d\w]+)/$',
-        'subscription',
+        views.subscription,
         name='subscription'
     ),
-)
+]
 '''
-urlpatterns += patterns('',
+urlpatterns += [
     url(
         r'^test/', 'djangosaml2.views.echo_attributes'
     ),
-)
+]
 '''

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.core.validators import validate_email
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -100,10 +100,9 @@ def subscription(request,action):
         )
 
     if request.POST:
-        return render_to_response(
-            'ajax_response.html',
-            {'response':response, },
-            context_instance=RequestContext(request)
+        return render(
+            request, 'ajax_response.html',
+            {'response':response, }
         )
     else:
         return HttpResponseRedirect(
@@ -157,26 +156,23 @@ def manager(request):
             n.subscriber = subscriber
             newsletters_pub.append(n)
 
-        return render_to_response(
-            'manager.html', {
+        return render(
+            request, 'manager.html', {
                 'contact':contact, 'email':email, 'action':action,
                 'newsletters_pub':newsletters_pub
-            },
-            context_instance=RequestContext(request)
+            }
         )
     else:
         form = ManagerForm()
-        return render_to_response(
-            'home.html',
-            {'form': form,'email':email,'valid_email':valid_email},
-            context_instance=RequestContext(request)
+        return render(
+            request, 'home.html',
+            {'form': form,'email':email,'valid_email':valid_email}
         )
 
 def home(request):
     form = ManagerForm()
-    return render_to_response(
-        'home.html', {'form':form,'home':True},
-        context_instance=RequestContext(request)
+    return render(
+        request, 'home.html', {'form':form,'home':True}
     )
 
 '''
@@ -184,8 +180,7 @@ def home(request):
 @login_required
 def saml_test(request):
     form = ManagerForm()
-    return render_to_response(
-        'saml_test.html',
-        context_instance=RequestContext(request)
+    return render(
+        request, 'saml_test.html'
     )
 '''
