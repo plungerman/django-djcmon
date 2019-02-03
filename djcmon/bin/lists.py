@@ -1,22 +1,33 @@
 from django.conf import settings
+
+from djcmon import Contact, Newsletter
+
 from createsend import *
 
-CreateSend.api_key = settings.API_KEY
+cs = CreateSend({'api_key': settings.API_KEY})
 
-cs = CreateSend()
-clients = cs.clients()
+client = Client(client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY})
 
-newsletters = []
-client = Client(client_id=settings.CLIENT_ID)
-lists = client.lists
-for l in lists():
-    list_obj = List(l.ListID)
-    print "list title = %s" % list_obj.details().Title
-    print "list id = %s" % l.ListID
-    subscriber = Subscriber(l.ListID)
-    n = Newsletter(list_obj.details().Title, l.ListID)
+newsletters_pub = []
+
+for l in settings.DESCRIPTIONS:
+    lid = l[0]
+    desc = l[1]
+
+    #list_obj = List(list_id=lid, auth=client.auth)
+    list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
+
+    #print("list title = {}".format(list_obj.details().Title))
+    #print("list id = {}".format(l.ListID))
+    #subscriber = Subscriber(list_id=lid, auth=client.auth)
+    subscriber = Subscriber(list_id=lid, auth={'api_key': settings.API_KEY})
+    me = subscriber.get(list_id=lid, email_address='skirk@carthage.edu')
+    subscriber = Contact(me.State,me.Name,me.EmailAddress,me.Date)
+    contact = subscriber
+    n = Newsletter(list_obj.details().Title, desc, lid)
     n.subscriber = subscriber
-    newsletters.append(n)
+    newsletters_pub.append(n)
+
 """
 for l in client.lists:
     list_obj = List(l.ListID)
@@ -25,4 +36,4 @@ for l in client.lists:
     n.subscriber = subscriber
     newsletters.append(n)
 """
-print newsletters
+print newsletters_pub

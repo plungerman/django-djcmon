@@ -17,9 +17,9 @@ from createsend import *
 
 import base64, os, datetime
 
-NOW = str(datetime.datetime.now().strftime("%m/%d/%Y"))
-YEAR = int(datetime.datetime.now().strftime("%Y"))
-MONTH = int(datetime.datetime.now().strftime("%m"))
+NOW = str(datetime.datetime.now().strftime('%m/%d/%Y'))
+YEAR = int(datetime.datetime.now().strftime('%Y'))
+MONTH = int(datetime.datetime.now().strftime('%m'))
 FEMAIL = settings.DEFAULT_FROM_EMAIL
 
 @csrf_exempt
@@ -33,41 +33,43 @@ def subscription(request,action):
     """
     # we will need GET for email confirmations
     if request.POST:
-        lid = request.POST["lid"]
-        email = request.POST["email"]
+        lid = request.POST['lid']
+        email = request.POST['email']
     elif request.GET:
-        lid = request.GET["lid"]
-        email = request.GET["email"]
+        lid = request.GET['lid']
+        email = request.GET['email']
         #action = request.GET.get('action')
     else:
         return HttpResponseRedirect(
-            reverse("newsletters_home")
+            reverse('newsletters_home')
         )
-    CreateSend.api_key = settings.API_KEY
-    subscriber = Subscriber(lid, email)
-    list = List(lid)
+    cs = CreateSend({'api_key': settings.API_KEY})
+    subscriber = Subscriber(
+        list_id=lid, email_address=email, auth={'api_key': settings.API_KEY}
+    )
+    list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
     # action
-    if action == "unsubscribe":
+    if action == 'unsubscribe':
         response = subscriber.unsubscribe()
-    elif action == "subscribe":
-        response = subscriber.add(lid, email, "", [], True)
+    elif action == 'subscribe':
+        response = subscriber.add(lid, email, '', [], True, 'unchanged')
     else:
         return HttpResponseRedirect(
-            reverse("newsletters_home")
+            reverse('newsletters_home')
         )
 
     # send email confirmation
-    subject = "%s request for Carthage Newsletter: %s" % (
-        action.capitalize(),list.details().Title
+    subject = '{} request for Carthage Newsletter: {}'.format(
+        action.capitalize(),list_obj.details().Title
     )
-    template = "confirmation_email.html"
+    template = 'confirmation_email.html'
 
     for d in settings.DESCRIPTIONS:
         if d[0] == lid:
             desc = d[1]
 
     data = {
-        'id':lid,'title':list.details().Title,
+        'id':lid,'title':list_obj.details().Title,
         'description':desc,'email':email,'action':action
     }
     send_mail(request, [email,], subject, FEMAIL, template, data)
@@ -75,13 +77,17 @@ def subscription(request,action):
     # check user status on lists
     sub = False
     count = 0
-    client = Client(client_id=settings.CARTHAGE_CM_ID)
+    client = Client(
+        client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY}
+    )
     for l in client.lists():
-        list_obj = List(l.ListID)
-        subscriber = Subscriber(l.ListID)
+        list_obj = List(list_id=l.ListID, auth={'api_key': settings.API_KEY})
+        subscriber = Subscriber(
+            list_id=l.ListID, auth={'api_key': settings.API_KEY}
+        )
         try:
-            me = subscriber.get(l.ListID,email)
-            if me.State == "Active":
+            me = subscriber.get(list_id=l.ListID, email_address=email)
+            if me.State == 'Active':
                 sub = True
                 count += 1
         except:
@@ -89,10 +95,10 @@ def subscription(request,action):
 
     # send notification if no lists or first list.
     # OJO: eventually this will go directly to CX
-    if (action == "unsubscribe" and not sub) or (
-        action == "subscribe" and count == 1):
-        subject = "%s request: %s" % (action.capitalize(), email)
-        template = "alert.html"
+    if (action == 'unsubscribe' and not sub) or (
+        action == 'subscribe' and count == 1):
+        subject = '{} request: {}'.format(action.capitalize(), email)
+        template = 'alert.html'
         data = {'email':email,'action':action,}
         send_mail(
             request, settings.EMAIL_NOTIFICATION, subject,
@@ -106,8 +112,9 @@ def subscription(request,action):
         )
     else:
         return HttpResponseRedirect(
-            reverse("newsletters_manager")+ "?email=%s" % email
+            reverse('newsletters_manager') + '?email={}'.format(email)
         )
+
 
 def manager(request):
     """
@@ -122,9 +129,9 @@ def manager(request):
         action = request.GET.get('action')
     elif request.POST:
         email = request.POST['email']
-        action = "Manager"
+        action = 'Manager'
     else:
-        return HttpResponseRedirect(reverse("newsletters_home"))
+        return HttpResponseRedirect(reverse('newsletters_home'))
 
     try:
         validate_email(email)
@@ -135,19 +142,21 @@ def manager(request):
     if email and valid_email:
         contact = None
         # connect to API and retrieve clients
-        CreateSend.api_key = settings.API_KEY
-        cs = CreateSend()
-        client = Client(client_id=settings.CARTHAGE_CM_ID)
+        cs = CreateSend({'api_key': settings.API_KEY})
+
+        client = Client(
+            client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY}
+        )
         newsletters_pub = []
-        #for l in client.lists():
         for l in settings.DESCRIPTIONS:
             lid = l[0]
             desc = l[1]
-            #list_obj = List(l.ListID)
-            list_obj = List(lid)
-            subscriber = Subscriber(lid)
+            list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
+            subscriber = Subscriber(
+                list_id=lid, auth={'api_key': settings.API_KEY}
+            )
             try:
-                me = subscriber.get(lid,email)
+                me = subscriber.get(list_id=lid, email_address=email)
                 subscriber = Contact(me.State,me.Name,me.EmailAddress,me.Date)
                 contact = subscriber
             except:

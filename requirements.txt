@@ -1,1 +1,7 @@
-django==1.11.16
+django==1.11.18
+setuptools==40.7.1
+MySQL-python==1.2.5
+python-memcached==1.59
+python-ldap==3.1.0
+pysaml2==4.6.5
+createsend==6.0.0
