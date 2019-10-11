@@ -6,7 +6,9 @@ from createsend import *
 
 cs = CreateSend({'api_key': settings.API_KEY})
 
-client = Client(client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY})
+client = Client(
+    client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY}
+)
 
 newsletters_pub = []
 
@@ -36,4 +38,4 @@ for l in client.lists:
     n.subscriber = subscriber
     newsletters.append(n)
 """
-print newsletters_pub
+print(newsletters_pub)
