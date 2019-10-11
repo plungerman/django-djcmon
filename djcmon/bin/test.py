@@ -1,35 +1,39 @@
-class Client(object):
+from django.conf import settings
 
-    def __init__(self, name=None, newsletters=None):
-        self.name = name
-        self.newsletters = newsletters
+from djcmon import Contact, Newsletter
 
-class Subscriber(object):
+from createsend import *
 
-    def __init__(self, state=False, email=None, date=None):
-        self.state = state
-        self.email = email
-        self.date = date
+cs = CreateSend({'api_key': settings.API_KEY})
 
-class Newsletter(object):
+client = Client(client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY})
 
-    def __init__(self, title=None, listid=None):
-        self.title = title
-        self.listid = listid
-        self.subscriber = Subscriber()
+newsletters_pub = []
 
+for l in settings.DESCRIPTIONS:
+    lid = l[0]
+    desc = l[1]
 
-if __name__ == "__main__":
+    #list_obj = List(list_id=lid, auth=client.auth)
+    list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
 
-    s = Subscriber(True, "test@test.com", date=None)
-    n = Newsletter("Test One", "1234567890")
-    n.subscriber = s
-    c = Client("ClientName", [n,])
+    #print("list title = {}".format(list_obj.details().Title))
+    #print("list id = {}".format(l.ListID))
+    #subscriber = Subscriber(list_id=lid, auth=client.auth)
+    subscriber = Subscriber(list_id=lid, auth={'api_key': settings.API_KEY})
+    me = subscriber.get(list_id=lid, email_address='eyoung@carthage.edu')
+    subscriber = Contact(me.State,me.Name,me.EmailAddress,me.Date)
+    contact = subscriber
+    n = Newsletter(list_obj.details().Title, desc, lid)
+    n.subscriber = subscriber
+    newsletters_pub.append(n.__dict__)
 
-    print c.name
-    for n in c.newsletters:
-        print n.title
-        print n.listid
-        print n.subscriber.state
-        print n.subscriber.email
-        print n.subscriber.date
+"""
+for l in client.lists:
+    list_obj = List(l.ListID)
+    subscriber = Subscriber(l.ListID)
+    n = Newsletter(list_obj.details().Title, l.ListID)
+    n.subscriber = subscriber
+    newsletters.append(n)
+"""
+print newsletters_pub
