@@ -1,7 +1,6 @@
-from django.contrib import admin
-from django.views.generic import TemplateView
-from django.conf.urls import include, url
+from django.views.generic import TemplateView, RedirectView
 from django.contrib.auth import views as auth_views
+from django.urls import include, path, re_path, reverse_lazy
 
 from djauth.views import loggedout
 
@@ -10,54 +9,50 @@ handler500 = 'djtools.views.errors.server_error'
 
 from djcmon import views
 
+
 urlpatterns = [
     # auth
-    url(
-        r'^accounts/login/$',
-        auth_views.login,
-        {'template_name': 'accounts/login.html'},
+    path(
+        'accounts/login/', auth_views.LoginView.as_view(),
+        {'template_name': 'registration/login.html'},
         name='auth_login'
     ),
-    url(
-        r'^accounts/logout/$',
-        auth_views.logout,
-        {'next_page': '/communications/accounts/loggedout/'},
-        name="auth_logout"
+    path(
+        'accounts/logout/', auth_views.LogoutView.as_view(),
+        {'next_page': reverse_lazy('auth_loggedout')},
+        name='auth_logout'
     ),
-    url(
-        r'^accounts/loggedout/$',
-        loggedout,
-        {'template_name': 'accounts/logged_out.html'}
+    path(
+        'accounts/loggedout/', loggedout,
+        {'template_name': 'registration/logged_out.html'},
+        name='auth_loggedout'
     ),
-    #url(
-    #   r'^saml2/', include('djangosaml2.urls')
-    #),
-    #url(
-    #   r'^saml-test/$',
-    #   'saml_test',
-    #   name='saml_test'
-    #),
+    path(
+        'accounts/',
+        RedirectView.as_view(url=reverse_lazy('auth_login'))
+    ),
+    path(
+        'denied/',
+        TemplateView.as_view(template_name='denied.html'), name='access_denied'
+    ),
+    # saml tests
+    #path('saml2/', include('djangosaml2.urls')),
+    #path('saml-test/', 'saml_test', name='saml_test'),
     # core
-    url(
-        r'^$', views.home, name='comms_home'
+    path(
+        '', views.home, name='comms_home'
     ),
-    url(
-        r'^newsletters/$',
-        views.home,
-        name='newsletters_home'
+    path(
+        'newsletters/', views.home, name='newsletters_home'
     ),
-    url(
-        r'^newsletters/manager/$',
-        views.manager,
-        name='newsletters_manager'
+    path(
+        'newsletters/manager/', views.manager, name='newsletters_manager'
     ),
-    #url(
-    #    r'^newsletters/unsubscribed/$',
-    #    TemplateView.as_view(template_name="")
+    #path(
+    #    'newsletters/unsubscribed/', TemplateView.as_view(template_name="")
     #),
-    url(
-        r'^newsletters/(?P<action>[\d\w]+)/$',
-        views.subscription,
+    re_path(
+        r'^newsletters/(?P<action>[\d\w]+)/$', views.subscription,
         name='subscription'
     ),
 ]

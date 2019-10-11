@@ -1,12 +1,10 @@
 from django.conf import settings
-from django.template import RequestContext
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.validators import validate_email
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-
 
 from djtools.utils.mail import send_mail
 
@@ -21,6 +19,7 @@ NOW = str(datetime.datetime.now().strftime('%m/%d/%Y'))
 YEAR = int(datetime.datetime.now().strftime('%Y'))
 MONTH = int(datetime.datetime.now().strftime('%m'))
 FEMAIL = settings.DEFAULT_FROM_EMAIL
+
 
 @csrf_exempt
 def subscription(request,action):
