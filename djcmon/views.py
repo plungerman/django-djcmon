@@ -68,10 +68,13 @@ def subscription(request,action):
             desc = d[1]
 
     data = {
-        'id':lid,'title':list_obj.details().Title,
-        'description':desc,'email':email,'action':action
+        'id': lid,
+        'title': list_obj.details().Title,
+        'description': desc,
+        'email': email,
+        'action': action,
     }
-    send_mail(request, [email,], subject, FEMAIL, template, data)
+    send_mail(request, [email], subject, FEMAIL, template, data)
 
     # check user status on lists
     sub = False
@@ -93,15 +96,17 @@ def subscription(request,action):
             pass
 
     # send notification if no lists or first list.
-    # OJO: eventually this will go directly to CX
     if (action == 'unsubscribe' and not sub) or (
         action == 'subscribe' and count == 1):
-        subject = '{} request: {}'.format(action.capitalize(), email)
+        subject = '{0} request: {1}'.format(action.capitalize(), email)
         template = 'alert.html'
-        data = {'email':email,'action':action,}
         send_mail(
-            request, settings.EMAIL_NOTIFICATION, subject,
-            FEMAIL, template, data
+            request,
+            settings.EMAIL_NOTIFICATION,
+            subject,
+            FEMAIL,
+            template,
+            data,
         )
 
     if request.POST:
@@ -126,9 +131,11 @@ def manager(request):
     if request.GET:
         email = request.GET['email']
         action = request.GET.get('action')
+        form = ManagerForm(use_required_attribute=False)
     elif request.POST:
         email = request.POST['email']
         action = 'Manager'
+        form = ManagerForm(request.POST, use_required_attribute=False)
     else:
         return HttpResponseRedirect(reverse('newsletters_home'))
 
@@ -139,12 +146,15 @@ def manager(request):
         valid_email = False
 
     if email and valid_email:
+        form.is_valid()
+        request.session['djcmon_data'] = form.cleaned_data
         contact = None
         # connect to API and retrieve clients
         cs = CreateSend({'api_key': settings.API_KEY})
 
         client = Client(
-            client_id=settings.CARTHAGE_CM_ID, auth={'api_key': settings.API_KEY}
+            client_id=settings.CARTHAGE_CM_ID,
+            auth={'api_key': settings.API_KEY},
         )
         newsletters_pub = []
         for l in settings.DESCRIPTIONS:
@@ -152,7 +162,7 @@ def manager(request):
             desc = l[1]
             list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
             subscriber = Subscriber(
-                list_id=lid, auth={'api_key': settings.API_KEY}
+                list_id=lid, auth={'api_key': settings.API_KEY},
             )
             try:
                 me = subscriber.get(list_id=lid, email_address=email)
@@ -166,29 +176,20 @@ def manager(request):
 
         return render(
             request, 'manager.html', {
-                'contact':contact, 'email':email, 'action':action,
-                'newsletters_pub':newsletters_pub
+                'contact': contact,
+                'email': email,
+                'action': action,
+                'newsletters_pub': newsletters_pub,
             }
         )
     else:
-        form = ManagerForm()
         return render(
             request, 'home.html',
             {'form': form,'email':email,'valid_email':valid_email}
         )
 
 def home(request):
-    form = ManagerForm()
+    form = ManagerForm(use_required_attribute=False)
     return render(
         request, 'home.html', {'form':form,'home':True}
     )
-
-'''
-# broken as of django 1.9
-@login_required
-def saml_test(request):
-    form = ManagerForm()
-    return render(
-        request, 'saml_test.html'
-    )
-'''

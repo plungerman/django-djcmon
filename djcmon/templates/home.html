@@ -1,71 +1,46 @@
 {% extends "base.html" %}
 {% block group_name %}Connect{% endblock %}
 {% block left_nav %}
-    {% include "left_nav.html" %}
+  {% include "left_nav.html" %}
 {% endblock %}
 {% block content_head %}
-    <h1 id="page_title">
-        Manage Your Email Preferences
-    </h1>
+  <h1 id="page_title">
+    Manage Your Email Preferences
+  </h1>
 {% endblock %}
 {% block content %}
 <div class="forms-container">
-    <p>
-        Keep up with news from Carthage College by receiving our email
-        newsletters.
-        Carthage sends monthly email newsletters to our parents, alumni, and
-        friends; and weekly email newsletters about Family Fun Night. To manage
-        your email subscriptions, please enter your email address below.
-        You will have an option to subscribe or unsubscribe from our
-        email publications.
-    </p>
-    <form method="post" action="{% url 'newsletters_manager' %}" class="form">
-        {% csrf_token %}
-        <fieldset class="blockLabels">
-            <ol>
-            {% for field in form.visible_fields %}
-                <li class="ctrlHolder">
-                <h3{% if field.field.required %} class="required"{% endif %}>
-                    {{ field.label_tag }}
-                </h3>
-                {% if not valid_email and not home %}
-                    <div class="warning">
-                    <span class="error-message">Enter a valid email</span>
-                {% else %}
-                    <div>
-                {% endif %}
-                {% if field.help_text %}
-                    <p class="help">{{field.help_text}}</p>
-                {% endif %}
-                {{field}}
-                </div>
-            </li>
-            {% endfor %}
-            </ol>
-        </fieldset>
+  <p>
+    Keep up with news from Carthage College by receiving our email
+    newsletters.
+    Carthage sends monthly email newsletters to our parents, alumni, and
+    friends; and weekly email newsletters about Family Fun Night. To manage
+    your email subscriptions, please enter your email address below.
+    You will have an option to subscribe or unsubscribe from our
+    email publications.
+  </p>
+  <form method="post" action="{% url 'newsletters_manager' %}" class="form">
+    {% csrf_token %}
+    <fieldset class="blockLabels">
+      <ol>
+      {% for field in form.visible_fields %}
+        {% include "form_field.inc.html" %}
+      {% endfor %}
+      </ol>
+    </fieldset>
     {% include "form_submit.inc.html" %}
-    </form>
-    <ul>
-        <li>
-            <a href="/communication-digital-media/">
-            Interested in a communication major?
-            </a>
-        </li>
-        <li>
-            <a href="/communications-office/">
-            Looking for the Office of Communications?
-            </a>
-        </li>
-    </ul>
-    <!--
-    <p>
-    {% if not user.is_anonymous %}
-        <a href="{% url 'auth_login' %}?next={{request.path}}">Logout</a>
-    {% else %}
-        If you are part of the Carthage community, please
-        <a href="{% url 'auth_logout' %}?next={{request.path}}">Login</a>
-    {% endif %}
-    </p>
-    -->
+  </form>
+  <ul>
+    <li>
+      <a href="/communication-digital-media/">
+        Interested in a communication major?
+      </a>
+    </li>
+    <li>
+      <a href="/communications-office/">
+        Looking for the Office of Communications?
+      </a>
+    </li>
+  </ul>
 </div>
 {% endblock %}

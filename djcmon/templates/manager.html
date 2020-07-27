@@ -74,58 +74,45 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 {% block content %}
-    <h2>Manage Your Newsletter Subscriptions</h2>
-    <p>
-        Manage all of your newsletter subscriptions for your email:
-        <strong>{{email}}</strong>.
-    </p>
-    <p>
-        Check the box next to the newsletters that you would like
-        to receive.
-    </p>
-{% if person and not user.is_anonymous and user.email == email %}
-<ul>
-    <li>id = {{person.id}}</li>
-    <li>FERPA = {{person.priv_code}}</li>
-    <li>address = {{person.addr_line1}}</li>
-    <li>address 2 = {{person.addr_line2}}</li>
-    <li>city = {{person.city}}</li>
-    <li>state = {{person.st}}</li>
-    <li>zip = {{person.zip}}</li>
-    <li>phone = {{person.homephone}}</li>
-</ul>
-{% else %}
-    {% if user.is_superuser %}
-    <p>
-        <a href="{{login_url}}?next={% url 'newsletters_manager' %}?email={{email}}">
-            Login to manage your communications preferences
-        </a>.
-    </p>
-    {% endif %}
-{% endif %}
-<div class="forms-container">
+  <h2>Manage Your Newsletter Subscriptions</h2>
+  <p>
+    Manage all of your newsletter subscriptions for your email:
+    <strong>{{email}}</strong>.
+  </p>
+  <p>
+    Check the box next to the newsletters that you would like
+    to receive.
+  </p>
+  {% if user.is_superuser %}
+  <p>
+    <a href="{{login_url}}?next={% url 'newsletters_manager' %}?email={{email}}">
+      Login to manage your communications preferences
+    </a>.
+  </p>
+  {% endif %}
+  <div class="forms-container">
     <h3>Carthage Newsletters</h3>
     <form class="form">
-        <ul>
-        {% for n in newsletters_pub %}
-        <li>
-            <input id="lid_{{n.listid}}"
-                class="newsletter"
-                type="checkbox"
-                name="newsletters[]"
-                value="{{n.title}}"
-                {% if n.subscriber.state == "Active" %}
-                checked="checked"
-                {% endif %} />
-            <strong>{{n.title}}</strong>
-        </li>
-        <li>
-            <blockquote style="padding-left:5px;">
-                <em>{{n.description}}</em>
-            </blockquote>
-        </li>
-        {% endfor %}
-        </ul>
+      <ul>
+      {% for n in newsletters_pub %}
+      <li>
+        <input id="lid_{{n.listid}}"
+        class="newsletter"
+        type="checkbox"
+        name="newsletters[]"
+        value="{{n.title}}"
+        {% if n.subscriber.state == "Active" %}
+        checked="checked"
+        {% endif %} />
+        <strong>{{n.title}}</strong>
+      </li>
+      <li>
+        <blockquote style="padding-left:5px;">
+            <em>{{n.description}}</em>
+        </blockquote>
+      </li>
+      {% endfor %}
+      </ul>
     </form>
-</div>
+  </div>
 {% endblock %}
