@@ -1,5 +1,5 @@
-createsend==6.1.0
+createsend==6.1.2
 django==2.2.24
-mysqlclient==1.4.4
-pycryptodome==3.9.0
+mysqlclient==2.0.3
+pycryptodome==3.11.0
 requests>=2.26.0
