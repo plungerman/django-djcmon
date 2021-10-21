@@ -1,4 +1,5 @@
-django==2.2.14
+createsend==6.1.0
+django==2.2.24
 mysqlclient==1.4.4
 pycryptodome==3.9.0
-createsend==6.1.0
+requests>=2.26.0
