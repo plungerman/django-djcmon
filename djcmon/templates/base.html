@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 {% block group_name %}Connect{% endblock %}
+{% block extra_style %}
+  {{block.super}}
+  <link href="//app.carthage.edu/themes/shared/css/icons.css"
+    type="text/css" rel="stylesheet">
+  <link href="//app.carthage.edu/themes/shared/css/forms.css"
+    rel="stylesheet" type="text/css">
+  <link href="//app.carthage.edu/themes/shared/css/tables.css"
+    rel="stylesheet" type="text/css">
+{% endblock %}
 {% block left_nav %}
   {% include "left_nav.html" %}
 {% endblock %}
 {% block content_head %}
-  <h1 id="page_title">
-    Manage Your Email Preferences
-  </h1>
+  <h1>Manage Your Email Preferences</h1>
+{% endblock %}
+{% block breadcrumb %}
+    <li><a href="/news-events/">News &amp; Events</a></li>
+    <li><a href="/news-events/social-media-directory/" aria-current="page">Social Media Directory</a></li>
 {% endblock %}
 {% block content %}
 <div class="forms-container">

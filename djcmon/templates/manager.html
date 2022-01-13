@@ -1,18 +1,20 @@
-{% extends "home.html" %}
+{% extends "base.html" %}
 {% block extra_style %}
+{{block.super}}
 <style type="text/css">
 div.growlUI {
 background: url(//www.carthage.edu/assets/img/ico/check48.png) no-repeat 10px 10px;
 }
-div.growlUI h1, div.growlUI h2 {
+div.growlUI h1, div.growlUI h3 {
     color: white; padding: 5px 5px 5px 75px; text-align: left;
     font-size:1.4em;
 }
 </style>
 {% endblock %}
 {% block extra_javascript %}
+{{block.super}}
 <script src="https://malsup.github.io/min/jquery.blockUI.min.js"
-    type="text/javascript"></script>
+  type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     $.blockUI.defaults.css.top = '40%';
@@ -29,7 +31,7 @@ $(document).ready(function() {
                 { lid: $(this).attr("id").split('_')[1], email: "{{email}}" }
             )
             $.blockUI({
-                message: "<div class='growlUI'><h1>You are now subscribed to</h1>'<h2>" + list_title + "</h2>'</div>",
+                message: "<div class='growlUI'><h1>You are now subscribed to</h1>'<h3>" + list_title + "</h3>'</div>",
                 css: {
                     border: 'none',
                     padding: '15px',
@@ -49,7 +51,7 @@ $(document).ready(function() {
                 { lid: $(this).attr("id").split('_')[1], email: "{{email}}" }
             )
             $.blockUI({
-                message: "<div class='growlUI'><h1>You have unsubscribed from</h1>'<h2>" + list_title + "</h2>'</div>",
+                message: "<div class='growlUI'><h1>You have unsubscribed from</h1>'<h3>" + list_title + "</h3>'</div>",
                 css: {
                     border: 'none',
                     padding: '15px',
@@ -67,14 +69,14 @@ $(document).ready(function() {
     {% if not action %}
         $.growlUI(
             '<h1>You have been unsubscribed.</h1>',
-            "<h2>You can manage all of your subscriptions on this page.</h2>"
+            "<h3>You can manage all of your subscriptions on this page.</h3>"
         );
     {% endif %}
 });
 </script>
 {% endblock %}
 {% block content %}
-  <h2>Manage Your Newsletter Subscriptions</h2>
+  <h3>Manage Your Newsletter Subscriptions</h3>
   <p>
     Manage all of your newsletter subscriptions for your email:
     <strong>{{email}}</strong>.

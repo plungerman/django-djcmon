@@ -184,12 +184,13 @@ def manager(request):
         )
     else:
         return render(
-            request, 'home.html',
-            {'form': form,'email':email,'valid_email':valid_email}
+            request, 'base.html',
+            {'form': form, 'email': email, 'valid_email': valid_email},
         )
+
 
 def home(request):
     form = ManagerForm(use_required_attribute=False)
     return render(
-        request, 'home.html', {'form':form,'home':True}
+        request, 'base.html', {'form':form, 'home':True,}
     )
