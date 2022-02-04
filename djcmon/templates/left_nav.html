@@ -1,14 +1,8 @@
 {% load livewhale_api %}
-{% get_lw_content as nav blurbs 1812 %}
-{{nav.body}}
+{% get_lw_content as nav blurbs 3263 %}
 <ul>
-    {% if not user.is_anonymous %}
-        <li>
-            <a href="{% url 'auth_login' %}?next={{request.path}}">Logout</a>
-        </li>
-    {% else %}
-        <li>
-            <a href="{% url 'auth_logout' %}?next={{request.path}}">Login</a>
-        </li>
-    {% endif %}
+  <li>
+    <a href="/news-events/" class="lw_group_link fancy-link">News &amp; Events<span class="fancy-link__icon" aria-hidden="true">›</span></a>
+    {{nav.body|safe}}
+  </li>
 </ul>
