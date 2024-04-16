@@ -85,7 +85,7 @@ $(document).ready(function() {
     Check the box next to the newsletters that you would like
     to receive.
   </p>
-  {% if user.is_superuser %}
+  {% if user.is_superuser and not user.is_authenticated %}
   <p>
     <a href="{{login_url}}?next={% url 'newsletters_manager' %}?email={{email}}">
       Login to manage your communications preferences

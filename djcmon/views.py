@@ -145,34 +145,36 @@ def manager(request):
     except:
         valid_email = False
 
-    if email and valid_email:
-        form.is_valid()
-        request.session['djcmon_data'] = form.cleaned_data
+    if email and valid_email or form.is_valid():
         contact = None
-        # connect to API and retrieve clients
-        cs = CreateSend({'api_key': settings.API_KEY})
-
-        client = Client(
-            client_id=settings.CARTHAGE_CM_ID,
-            auth={'api_key': settings.API_KEY},
-        )
         newsletters_pub = []
-        for l in settings.DESCRIPTIONS:
-            lid = l[0]
-            desc = l[1]
-            list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
-            subscriber = Subscriber(
-                list_id=lid, auth={'api_key': settings.API_KEY},
+        if True:
+            #request.session['djcmon_data'] = form.cleaned_data
+            request.session['djcmon_data'] = form.data
+            # connect to API and retrieve clients
+            cs = CreateSend({'api_key': settings.API_KEY})
+
+            client = Client(
+                client_id=settings.CARTHAGE_CM_ID,
+                auth={'api_key': settings.API_KEY},
             )
-            try:
-                me = subscriber.get(list_id=lid, email_address=email)
-                subscriber = Contact(me.State,me.Name,me.EmailAddress,me.Date)
-                contact = subscriber
-            except:
-                subscriber = None
-            n = Newsletter(list_obj.details().Title, desc, lid)
-            n.subscriber = subscriber
-            newsletters_pub.append(n)
+            newsletters_pub = []
+            for l in settings.DESCRIPTIONS:
+                lid = l[0]
+                desc = l[1]
+                list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
+                subscriber = Subscriber(
+                    list_id=lid, auth={'api_key': settings.API_KEY},
+                )
+                try:
+                    me = subscriber.get(list_id=lid, email_address=email)
+                    subscriber = Contact(me.State,me.Name,me.EmailAddress,me.Date)
+                    contact = subscriber
+                except Exception as error:
+                    subscriber = None
+                n = Newsletter(list_obj.details().Title, desc, lid)
+                n.subscriber = subscriber
+                newsletters_pub.append(n)
 
         return render(
             request, 'manager.html', {
