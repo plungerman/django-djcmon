@@ -58,6 +58,8 @@ STATICFILES_FINDERS = (
 # gmail API settings
 EMAIL_FROM = ''
 GMAIL_USER = ''
+GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+EMAIL_BACKEND = 'gmailapi_backend.service.GmailApiBackend'
 GMAIL_SERVICE_ACCOUNT_JSON = ''
 GOOGLE_SERVICE_ACCOUNT = ''
 # system emails
