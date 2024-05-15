@@ -4,12 +4,10 @@ import os
 DEBUG = False
 #DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
-    ('larry@example.com'),
+    ('', ''),
 )
 MANAGERS = ADMINS
-
 AUTH_PROFILE_MODULE = 'core.UserProfile'
 # databases
 DATABASES = {
@@ -57,15 +55,21 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-EMAIL_HOST = 'smtp.example.com'
-EMAIL_HOST_USER = 'smtpuser@example.com'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_NOTIFICATION = ["arobillard@carthage.edu",]
-DEFAULT_FROM_EMAIL = 'support@example.com'
-SERVER_EMAIL = 'support@example.com'
-SERVER_MAIL='support@example.com'
+# gmail API settings
+EMAIL_FROM = ''
+GMAIL_USER = ''
+GMAIL_SERVICE_ACCOUNT_JSON = ''
+GOOGLE_SERVICE_ACCOUNT = ''
+# system emails
+DEFAULT_FROM_EMAIL = ''
+SERVER_EMAIL = ''
+SERVER_MAIL=''
+# system emails
+DEFAULT_FROM_EMAIL = 'eris@carthage.edu'
+SERVER_EMAIL = 'larry@carthage.edu'
+SERVER_MAIL = 'eris@carthage.edu'
+EMAIL_NOTIFICATION = []
+# middleware
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -112,8 +116,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'django.contrib.admin',
-    'communications',
+    'djcmon',
+    'djtools',
+    # gmail api for send mail
+    'gmailapi_backend',
 )
 # LDAP Constants
 LDAP_SERVER = ""

@@ -1,5 +1,6 @@
-django==4.2.11
 createsend
+django==4.2.11
+django-gmailapi-json-backend
 mysqlclient
 pycryptodome
 requests
