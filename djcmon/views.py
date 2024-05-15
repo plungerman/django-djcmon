@@ -74,7 +74,16 @@ def subscription(request,action):
         'email': email,
         'action': action,
     }
-    send_mail(request, [email], subject, FEMAIL, template, data)
+    frum = settings.EMAIL_NOTIFICATION
+    send_mail(
+        request,
+        [email],
+        subject,
+        frum,
+        template,
+        data,
+        reply_to=[frum,],
+    )
 
     # check user status on lists
     sub = False
