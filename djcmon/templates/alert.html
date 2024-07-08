@@ -8,13 +8,13 @@
 <h3>{{data.email}}</h3>
 <dl>
   <dt style="background:#efefef; color:#000; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;">First name</dt>
-  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.first_name}}</dd>
+  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.first_name|default:'&nbsp;'}}</dd>
   <dt style="background:#efefef; color:#000; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;">Last name</dt>
-  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.last_name}}</dd>
+  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.last_name|default:'&nbsp;'}}</dd>
   <dt style="background:#efefef; color:#000; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;">Relationship to Carthage</dt>
-  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.relation}}</dd>
+  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.relation|default:'&nbsp;'}}</dd>
   <dt style="background:#efefef; color:#000; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;">Class of</dt>
-  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.class_of}}</dd>
+  <dd style="margin:2px 0; padding:5px 0;">{{request.session.djcmon_data.class_of|default:'&nbsp;'}}</dd>
 </dl>
 <h4>Address</h4>
 <pre>
