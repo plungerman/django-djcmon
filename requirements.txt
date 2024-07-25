@@ -1,5 +1,5 @@
 createsend
-django==4.2.11
+django==4.2.14
 django-gmailapi-json-backend
 mysqlclient
 pycryptodome
