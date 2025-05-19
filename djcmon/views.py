@@ -1,6 +1,11 @@
+import base64
+import datetime
+import os
+
 from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import render
 from django.core.validators import validate_email
 from django.views.decorators.csrf import csrf_exempt
@@ -13,7 +18,6 @@ from djcmon.forms import ManagerForm
 
 from createsend import *
 
-import base64, os, datetime
 
 NOW = str(datetime.datetime.now().strftime('%m/%d/%Y'))
 YEAR = int(datetime.datetime.now().strftime('%Y'))
@@ -111,11 +115,12 @@ def subscription(request,action):
         template = 'alert.html'
         send_mail(
             request,
-            settings.EMAIL_NOTIFICATION,
+            frum,
             subject,
             FEMAIL,
             template,
             data,
+            reply_to=[frum,],
         )
 
     if request.POST:
@@ -138,11 +143,11 @@ def manager(request):
     http://help.campaignmonitor.com/topic.aspx?t=86
     """
     if request.GET:
-        email = request.GET['email']
+        email = request.GET.get('email')
         action = request.GET.get('action')
         form = ManagerForm(use_required_attribute=False)
     elif request.POST:
-        email = request.POST['email']
+        email = request.POST.get('email')
         action = 'Manager'
         form = ManagerForm(request.POST, use_required_attribute=False)
     else:
