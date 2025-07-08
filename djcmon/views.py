@@ -115,12 +115,12 @@ def subscription(request,action):
         template = 'alert.html'
         send_mail(
             request,
-            frum,
+            [frum,],
             subject,
             FEMAIL,
             template,
             data,
-            reply_to=[frum,],
+            reply_to=[email,],
         )
 
     if request.POST:
