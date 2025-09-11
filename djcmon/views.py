@@ -5,7 +5,6 @@ import os
 from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.http import Http404
 from django.shortcuts import render
 from django.core.validators import validate_email
 from django.views.decorators.csrf import csrf_exempt
@@ -36,11 +35,11 @@ def subscription(request,action):
     """
     # we will need GET for email confirmations
     if request.POST:
-        lid = request.POST['lid']
-        email = request.POST['email']
+        lid = request.POST.get('lid')
+        email = request.POST.get('email')
     elif request.GET:
-        lid = request.GET['lid']
-        email = request.GET['email']
+        lid = request.GET.get('lid')
+        email = request.GET.get('email')
         #action = request.GET.get('action')
     else:
         return HttpResponseRedirect(
@@ -52,14 +51,19 @@ def subscription(request,action):
     )
     list_obj = List(list_id=lid, auth={'api_key': settings.API_KEY})
     # action
+    fail = HttpResponseRedirect(reverse('newsletters_home'))
     if action == 'unsubscribe':
-        response = subscriber.unsubscribe()
+        try:
+            response = subscriber.unsubscribe()
+        except Exception:
+            return fail
     elif action == 'subscribe':
-        response = subscriber.add(lid, email, '', [], True, 'unchanged')
+        try:
+            response = subscriber.add(lid, email, '', [], True, 'unchanged')
+        except Exception:
+            return fail
     else:
-        return HttpResponseRedirect(
-            reverse('newsletters_home')
-        )
+        return fail
 
     # send email confirmation
     subject = '{} request for Carthage Newsletter: {}'.format(
